@@ -1,6 +1,7 @@
 //Hier wird ohne jegliche funktionen gearbeitet. Dieses skript wird direkt nach laden ausgeführt und stellt die geforderten Funktionalitäten bereit
 var mymap = null;
 var Token = sessionStorage.getItem("Token")
+var sdata;
 init()
 
 function init() {
@@ -104,17 +105,6 @@ function init() {
                     var data = featureGroup.toGeoJSON();
                     document.getElementById("out").innerHTML = JSON.stringify(data);
 
-                    //Sendet datein
-
-                    // Sending and receiving data in JSON format using POST method
-//
-                    $.ajax({
-                        url: "/data",
-                        type: 'POST',
-                        contentType:'application/json',
-                        data: JSON.stringify(data),
-                        dataType:'json'
-                    });
 
                 }
                 //Download Export
@@ -129,6 +119,48 @@ function init() {
                     document.getElementById('exportdown').setAttribute('download', 'data.geojson');
 
                 }
+                document.getElementById("save").onclick = function(){
+                    var data = featureGroup.toGeoJSON();
+                    document.getElementById("out").innerHTML = JSON.stringify(data);
+
+                    //Sendet datein
+
+                    // Sending and receiving data in JSON format using POST method
+//
+                    $.ajax({
+                        url: "/dataleaf",
+                        type: 'POST',
+                        contentType:'application/json',
+                        data: JSON.stringify(data),
+                        dataType:'json'
+                    });
+                }
+
+                document.getElementById("savelocal").onclick = function(){
+                    if (navigator.geolocation) { //Überprüft ob geolocation supportet wird
+                        navigator.geolocation.getCurrentPosition(function (x) { //Wenn erfolgreich koordinaten ermittelt
+                            var data = {
+                                "type" : "Point",
+                                "coordinates" : [x.coords.longitude, x.coords.latitude]
+                            };
+                            $.ajax({
+                                url: "/datalocal",
+                                type: 'POST',
+                                contentType:'application/json',
+                                data: JSON.stringify(data),
+                                dataType:'json'
+                            });
+
+
+                        }, function (e) { //Bei fehler Tabelle ausblenden und Fehlermeldung einblenden
+                           throw e;
+                        });
+                    } else {
+                        //Falls geolocation nicht supportet, Fehlermeldung einblenden
+                        throw "Unkown Error"
+                }
+                }
+
                 //Ergänzt die Karte um einen Fullscreen Button
                 mymap.addControl(new L.Control.Fullscreen());
             } else {
@@ -147,7 +179,78 @@ function init() {
     }
     req.open("GET", resource, true);
     req.send();
+    getData();
+}
+function getData(){
+    var resource = "/gdata";
+    $.ajax(resource,   // request url
+        {
+            dataType: 'json',
+            timeout: 500,
+            success: function (data, status, xhr) {// success callback function
+                if(status == "success"){
+                    sdata = data;
+                    configureSwitch();
+                }
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) { // error callback
+                console.log("Error")
+            }
+        });
+}
+function del() {
+    var selection = document.getElementById("switch");
+    if(typeof parseInt(selection.value) == 'number'){
+        $.ajax({
+            url: "/del",
+            type: 'POST',
+            contentType:'application/json',
+            data: JSON.stringify({
+                "id" :  sdata[selection.value]._id
+            }),
+            dataType:'json'
+        });
+    }
+
 }
 
+function configureSwitch() {
+    var selection = document.getElementById("switch");
+    for(var i = 0; i < sdata.length; i++){
+        var opt = document.createElement("option");
+        opt.appendChild(document.createTextNode(sdata[i].coordinates[0]+ ", " + sdata[i].coordinates[1]))
+        opt.value = i;
+        selection.appendChild(opt);
+    }
+}
+
+function geocoding() {
+    var adress = $("#geocoding").val();
+    var resource = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + adress + ".json?" + "autocomplete=true" + "language=de" + "&access_token=" + Token;
+
+
+
+    $.ajax(resource,   // request url
+        {
+            dataType: 'json',
+            timeout: 500,
+            success: function (data, status, xhr) {// success callback function
+                if(status == "success"){
+                    $.ajax({
+                        url: "/datalocal",
+                        type: 'POST',
+                        contentType:'application/json',
+                        data: JSON.stringify(data.features[0].geometry),
+                        dataType:'json'
+                    });
+                }
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) { // error callback
+               throw errorMessage
+            }
+        });
+}
 
 

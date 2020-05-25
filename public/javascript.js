@@ -111,10 +111,10 @@ function configureSwitch() {
         if(typeof x == 'number'){
             MetaJSON.Point = { //Erstellen eines JSON Objektes
                 "type": "Point",
-                "coordinates": [sdata[x].coordinates[1], sdata[x].coordinates[0]]
+                "coordinates": [sdata[x].coordinates[0], sdata[x].coordinates[1]]
             }
             setLocationData();
-            reverseGeoCoding(sdata[x].coordinates[1], sdata[x].coordinates[0])
+
         }
 
     }

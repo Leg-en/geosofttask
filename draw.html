@@ -32,6 +32,15 @@
 <br>
 <button type="button" class="btn btn-primary" id="export">Exportiere GeoJSON als Text</button>
 <a href='#' id='exportdown' class="btn btn-primary">Downloade GeoJSON</a>
+<button type="button" class="btn btn-primary" id="save">Speichere Punkte Auf Server</button>
+<button type="button" class="btn btn-primary" id="savelocal">Lokalisiere und Speichere Position</button>
+<input type="text" class="form-control" id="geocoding">
+<button type="button" class="btn btn-primary" id="savecoding" onclick="geocoding()">Lokalisiere und Speichere Position</button>
+<select class="custom-select" id="switch">
+    <option value="" selected>Mögliche Punkte</option>
+</select>
+<button type="button" class="btn btn-danger" onclick="del()">Delete</button>
+
 <div id="out"></div>
 
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"

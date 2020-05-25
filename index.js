@@ -51,7 +51,18 @@ app.get('/gdata', (req,res) => {
     }))
 });
 
-app.post('/data', function (req, res) {
+app.post('/del', (req,res) => {
+    res.send({ status: 'SUCCESS' });
+    var id = req.body. id;
+    app.locals.db.collection("usercollection").deleteOne({
+        "_id" : new mongodb.ObjectID(id)
+    }, (error,  result) => {
+        if (error) throw  error
+
+    })
+});
+
+app.post('/dataleaf', function (req, res) {
     res.send({ status: 'SUCCESS' });
     for(var i = 0; i<req.body.features.length; i++){
         app.locals.db.collection("usercollection").insertOne({
@@ -59,6 +70,14 @@ app.post('/data', function (req, res) {
             "coordinates": [req.body.features[i].geometry.coordinates[0],req.body.features[i].geometry.coordinates[1]]
         })
     }
+});
+
+app.post('/datalocal', function (req, res) {
+    res.send({ status: 'SUCCESS' });
+    app.locals.db.collection("usercollection").insertOne({
+        "type" : "Point",
+        "coordinates": [req.body.coordinates[0], req.body.coordinates[1]]
+    })
 });
 
 
