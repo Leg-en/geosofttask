@@ -99,7 +99,6 @@ function getData(){
 
 function configureSwitch() {
     var selection = document.getElementById("switch");
-    console.dir(sdata);
     for(var i = 0; i < sdata.length; i++){
         var opt = document.createElement("option");
         opt.appendChild(document.createTextNode(sdata[i].coordinates[0]+ ", " + sdata[i].coordinates[1]))
