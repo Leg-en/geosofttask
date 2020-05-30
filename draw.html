@@ -26,16 +26,21 @@
         </div>
     </div>
 </nav>
-<div class="alert alert-danger" role="alert" id="failalert" hidden></div>
-<div id='mapid' style="height: 700px"></div>
+
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col" >
+            <div class="alert alert-danger" role="alert" id="failalert" hidden></div>
+            <div id='mapid' style="height: 700px"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <input type="text" class="form-control" id="geocoding">
             <button type="button" class="btn btn-primary" id="savecoding" onclick="geocoding()">Geocoding und Speichern</button>
         </div>
-        <div class="col-lg-6">
+        <div class="col">
             <select class="custom-select" id="switch">
                 <option value="" selected>Mögliche Punkte</option>
             </select>
