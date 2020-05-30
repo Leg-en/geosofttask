@@ -23,8 +23,8 @@ var Map = {
     "karte": null,
     "marker": null,
     "icon" : L.icon({ //Hebt es farblich hervor. Größenskalierung stimmt noch nicht so ganz
-        iconUrl: 'public/marker-icon-red.png',
-        shadowUrl: 'public/marker-shadow.png',
+        iconUrl: 'public/graphics/marker-icon-red.png',
+        shadowUrl: 'public/graphics/marker-shadow.png',
         iconSize: [25, 41], // size of the icon
         shadowSize:   [41, 41], // size of the shadow
         iconAnchor:   [12, 41], // point of the icon which will correspond to marker's location
@@ -263,6 +263,7 @@ function setKey() {
                         document.getElementById("key").hidden = true;
                         //Alles Neu Abfragen und Erstellen
                         getHaltestellen();
+                        getData();
                     } else {
                         document.getElementById("notifications").hidden = false;
                         document.getElementById("notifications").innerText = "Invalides Token";
@@ -582,18 +583,21 @@ function calculateRes() {
 function calculateAbfahrtszeit(nr) {
     var resAbf = []; //Array Deklaration
     var date; //date Deklaration
+    var headabf = document.getElementById('headabf');
     if (MetaJSON.Abfahrten.length != 0) { //Überprüfen ob Abfahrten überhaupt existieren
         for (var j = 0; j < MetaJSON.Abfahrten.length; j++) {
             date = new Date(MetaJSON.Abfahrten[j].tatsaechliche_abfahrtszeit * 1000); //Umrechnen des Unix Timestamps
             resAbf[j] = [date.toTimeString(), date.toDateString(), MetaJSON.Abfahrten[j].linienid,MetaJSON.Abfahrten[j].fahrtbezeichner] //Stelle array zusammen
         }
-        document.getElementById('headabf').innerHTML = "<h1> Abfahrten für Haltestellen Nummer: " + nr + " </h1>"
+
+        headabf.innerText = "Abfahrten für Haltestellen Nummer: " + nr + " "
         document.getElementById('alert').hidden = true;
         createTable(resAbf, 'abf', ['Zeit', "Datum", 'Linie', 'Fahrtbez'])
     } else {
         document.getElementById('abf').innerHTML = ""
         document.getElementById('alert').hidden = false;
         document.getElementById('alert').innerText = "Keine passenden Abfahrten gefunden für Haltestellennummer: " + nr;
+        headabf.innerText = "Keine Abfahrten für Nr.: " + nr
     }
 
 

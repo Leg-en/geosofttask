@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Leaflet Draw</title>
-    <link rel="icon" href="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/638dce4d-9cc0-433a-a4d1-4e6265af1786/dbjkgkw-e8108fae-0fd3-47a3-9161-6f4f00e68a0a.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvNjM4ZGNlNGQtOWNjMC00MzNhLWE0ZDEtNGU2MjY1YWYxNzg2XC9kYmprZ2t3LWU4MTA4ZmFlLTBmZDMtNDdhMy05MTYxLTZmNGYwMGU2OGEwYS5wbmcifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.2p2jbL2WWZnZUxzBfYW0yXVYMZNagDzXWkBCVOEjvm8" type="image/x-icon">
-    <link href="public/styles.css" rel="stylesheet">
+    <link href="public/css/styles.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
           integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
           crossorigin=""/>
@@ -29,19 +28,32 @@
 </nav>
 <div class="alert alert-danger" role="alert" id="failalert" hidden></div>
 <div id='mapid' style="height: 700px"></div>
-<br>
-<button type="button" class="btn btn-primary" id="export">Exportiere GeoJSON als Text</button>
-<a href='#' id='exportdown' class="btn btn-primary">Downloade GeoJSON</a>
-<button type="button" class="btn btn-primary" id="save">Speichere Punkte Auf Server</button>
-<button type="button" class="btn btn-primary" id="savelocal">Lokalisiere und Speichere Position</button>
-<input type="text" class="form-control" id="geocoding">
-<button type="button" class="btn btn-primary" id="savecoding" onclick="geocoding()">Lokalisiere und Speichere Position</button>
-<select class="custom-select" id="switch">
-    <option value="" selected>Mögliche Punkte</option>
-</select>
-<button type="button" class="btn btn-danger" onclick="del()">Delete</button>
 
-<div id="out"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <input type="text" class="form-control" id="geocoding">
+            <button type="button" class="btn btn-primary" id="savecoding" onclick="geocoding()">Geocoding und Speichern</button>
+        </div>
+        <div class="col-lg-6">
+            <select class="custom-select" id="switch">
+                <option value="" selected>Mögliche Punkte</option>
+            </select>
+            <button type="button" class="btn btn-danger" onclick="del()">Delete</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="out"></div>
+            <div id="container"></div> <!-- Container für den Download  -->
+        </div>
+    </div>
+</div>
+
+
+
+
+
 
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
         integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
@@ -54,6 +66,6 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
-<script src="public/draw.js"></script>
+<script src="public/javascript/draw.js"></script>
 </body>
 </html>

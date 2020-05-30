@@ -99,44 +99,45 @@ function init() {
 
                     featureGroup.addLayer(e.layer);
                 });
-                //String Export
-                document.getElementById('export').onclick = function (e) {
 
+
+                //Ergänzt die Karte um einen Fullscreen Button
+                mymap.addControl(new L.Control.Fullscreen());
+                //Ergänzt Custombuttons
+                mymap.addControl( createCustomControl("Exportiere als GeoJSON Text", "Export Text", function () {
                     var data = featureGroup.toGeoJSON();
                     document.getElementById("out").innerHTML = JSON.stringify(data);
-
-
-                }
-                //Download Export
-                document.getElementById('exportdown').onclick = function (e) {
-
+                }));
+                mymap.addControl(createCustomControl("Downloade GeoJSON", "Download JSON", function () {
                     var data = featureGroup.toGeoJSON();
-
 
                     var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
 
-                    document.getElementById('exportdown').setAttribute('href', 'data:' + convertedData);
-                    document.getElementById('exportdown').setAttribute('download', 'data.geojson');
+                    var container = document.getElementById("container");
+                    $('<a href="data:' + convertedData + '" id="download" download="data.json">download JSON</a>').appendTo('#container');
+                    var download = document.getElementById("download");
+                    download.click();
+                    container.removeChild(download);
 
-                }
-                document.getElementById("save").onclick = function(){
+
+                }));
+                mymap.addControl(createCustomControl("Speichere Punkt auf Server", "Save to Server", ()=>{
                     var data = featureGroup.toGeoJSON();
                     document.getElementById("out").innerHTML = JSON.stringify(data);
 
                     //Sendet datein
 
                     // Sending and receiving data in JSON format using POST method
-//
                     $.ajax({
-                        url: "/dataleaf",
+                        url: "/setdata",
                         type: 'POST',
                         contentType:'application/json',
                         data: JSON.stringify(data),
                         dataType:'json'
                     });
-                }
-
-                document.getElementById("savelocal").onclick = function(){
+                    getData();
+                }));
+                mymap.addControl(createCustomControl("Lokalisiere mit Browser", "Lokalisiere", ()=>{
                     if (navigator.geolocation) { //Überprüft ob geolocation supportet wird
                         navigator.geolocation.getCurrentPosition(function (x) { //Wenn erfolgreich koordinaten ermittelt
                             var data = {
@@ -144,25 +145,23 @@ function init() {
                                 "coordinates" : [x.coords.longitude, x.coords.latitude]
                             };
                             $.ajax({
-                                url: "/datalocal",
+                                url: "/setdata",
                                 type: 'POST',
                                 contentType:'application/json',
                                 data: JSON.stringify(data),
                                 dataType:'json'
                             });
+                            getData();
 
 
                         }, function (e) { //Bei fehler Tabelle ausblenden und Fehlermeldung einblenden
-                           throw e;
+                            throw e;
                         });
                     } else {
                         //Falls geolocation nicht supportet, Fehlermeldung einblenden
                         throw "Unkown Error"
-                }
-                }
-
-                //Ergänzt die Karte um einen Fullscreen Button
-                mymap.addControl(new L.Control.Fullscreen());
+                    }
+                }))
             } else {
                 document.getElementById("failalert").hidden = false;
                 document.getElementById("failalert").innerText = "Kein API Key! Bitte auf anderer Seite Eingeben";
@@ -212,11 +211,17 @@ function del() {
             dataType:'json'
         });
     }
+    getData();
 
 }
 
 function configureSwitch() {
     var selection = document.getElementById("switch");
+    selection.innerHTML = "";
+    var opt = document.createElement("option");
+    opt.appendChild(document.createTextNode("Mögliche Punkte"));
+    opt.value = "";
+    selection.appendChild(opt);
     for(var i = 0; i < sdata.length; i++){
         var opt = document.createElement("option");
         opt.appendChild(document.createTextNode(sdata[i].coordinates[0]+ ", " + sdata[i].coordinates[1]))
@@ -229,8 +234,6 @@ function geocoding() {
     var adress = $("#geocoding").val();
     var resource = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + adress + ".json?" + "autocomplete=true" + "language=de" + "&access_token=" + Token;
 
-
-
     $.ajax(resource,   // request url
         {
             dataType: 'json',
@@ -238,12 +241,13 @@ function geocoding() {
             success: function (data, status, xhr) {// success callback function
                 if(status == "success"){
                     $.ajax({
-                        url: "/datalocal",
+                        url: "/setdata",
                         type: 'POST',
                         contentType:'application/json',
                         data: JSON.stringify(data.features[0].geometry),
                         dataType:'json'
                     });
+                    getData();
                 }
 
             },
@@ -252,5 +256,41 @@ function geocoding() {
             }
         });
 }
+
+
+function createCustomControl(title, value, call) {
+    var customControl = L.Control.extend({
+
+    options: {
+        position: 'topleft'
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('input');
+        container.type="button";
+        container.title=title;
+        container.value = value;
+
+        container.style.backgroundColor = 'white';
+        //container.style.backgroundImage = "url(https://t1.gstatic.com/images?q=tbn:ANd9GcR6FCUMW5bPn8C4PbKak2BJQQsmC-K9-mbYBeFZm1ZM2w2GRy40Ew)";
+        container.style.backgroundSize = "30px 30px";
+        container.style.width = '100px';
+        container.style.height = '30px';
+
+        container.onmouseover = function(){
+            //Nichts
+            //Todo: Was sinnvolles ergänzen
+        }
+        container.onmouseout = ()=>{
+            //Todo: Ergänzen
+        }
+
+        container.onclick = call;
+        return container;
+    }
+});
+    return new customControl;
+}
+
 
 

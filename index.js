@@ -62,22 +62,20 @@ app.post('/del', (req,res) => {
     })
 });
 
-app.post('/dataleaf', function (req, res) {
-    res.send({ status: 'SUCCESS' });
-    for(var i = 0; i<req.body.features.length; i++){
-        app.locals.db.collection("usercollection").insertOne({
-            "type" : "Point",
-            "coordinates": [req.body.features[i].geometry.coordinates[0],req.body.features[i].geometry.coordinates[1]]
-        })
-    }
-});
 
-app.post('/datalocal', function (req, res) {
-    res.send({ status: 'SUCCESS' });
-    app.locals.db.collection("usercollection").insertOne({
-        "type" : "Point",
-        "coordinates": [req.body.coordinates[0], req.body.coordinates[1]]
-    })
-});
+app.post('/setdata', (req,res) => {
+    if(req.body.type == "Point"){
+        app.locals.db.collection('usercollection').insertOne(req.body);
+        res.send({ status: 'SUCCESS' });
+    }else if(req.body.type == 'FeatureCollection'){
+        for (var i = 0; i < req.body.features.length; i++){
+            app.locals.db.collection('usercollection').insertOne(req.body.features[i].geometry)
+        }
+        res.send({ status: 'SUCCESS' });
+    }
+    //Würde gerne ne Fehlermeldung senden. Aber keine ahnung was der richtige Status ist
+    //Todo: Status Meldung erstellen für fehler
+
+})
 
 
