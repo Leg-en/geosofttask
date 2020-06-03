@@ -1,9 +1,14 @@
 const bodyParser = require('body-parser')
 const express = require('express');
 const mongodb = require('mongodb');
-const port=3000;
+const { JSDOM } = require( "jsdom" );
+const { window } = new JSDOM( "" );
+const $ = require( "jquery" )( window );
+const port=80;
 
 const app = express();
+
+var busdata;
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -61,9 +66,34 @@ app.post('/del', (req,res) => {
 
     })
 });
-
+/**
+ * Anfrage an den Server mit den Busdaten. Wird gespeichert und für anfragen wieder raus gegeben.
+ * Ist bestimmt nicht wirklich sinnvoll. Aber beim Programmieren der Seite hat sich  gezeigt das der Server mti den Busdaten gelgentlich nicht mehr Antwortet. Also speichere ich hier die daten zwischen.
+ * In einer Produktiv umgebung müsste man es noch gelgentlich Aktualisieren. Jedoch reicht das hier für unsere Zwecke
+ */
+app.get('/busdata', (req, res) => {
+if(busdata != null){
+    res.json(busdata)
+}else{
+    var resource = "https://rest.busradar.conterra.de/prod/haltestellen";
+    $.ajax(resource,   // request url
+        {
+            dataType: 'json',
+            timeout: 3000,
+            success: function (data, status, xhr) {// success callback function
+                if(status == "success"){
+                    res.json(data);
+                    busdata = data;
+                }},
+            error : function () {
+                res.send({status: 'ERROR'})
+            }
+        });
+}
+})
 
 app.post('/setdata', (req,res) => {
+    console.dir(req.body)
     if(req.body.type == "Point"){
         app.locals.db.collection('usercollection').insertOne(req.body);
         res.send({ status: 'SUCCESS' });

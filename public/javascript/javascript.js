@@ -720,7 +720,7 @@ function plotBusLine(bez) { //Todo: Implementieren das alle Haltestellen auf der
  * Ruft die Haltestellen ab
  */
 function getHaltestellen() {
-    var resource = "https://rest.busradar.conterra.de/prod/haltestellen";
+    var resource = "/busdata";
     $.ajax(resource,   // request url
         {
             dataType: 'json',

@@ -1,7 +1,9 @@
 //Hier wird ohne jegliche funktionen gearbeitet. Dieses skript wird direkt nach laden ausgeführt und stellt die geforderten Funktionalitäten bereit
 var mymap = null;
+var marker;
 var Token = sessionStorage.getItem("Token")
 var sdata;
+var  overlay = null;
 init()
 
 function init() {
@@ -67,7 +69,7 @@ function init() {
                     layers: [mapbox]
                 });
                 mymap.setView([51.9606649, 7.6261347], 11);
-                L.control.layers({
+                var layers = L.control.layers({
                     "Mapbox OSM" : mapbox,
                     "OpenTopoMap": OpenTopoMap,
                     "Decimal" : Decimal,
@@ -107,7 +109,7 @@ function init() {
                 mymap.addControl( createCustomControl("Exportiere als GeoJSON Text", "Export Text", function () {
                     var data = featureGroup.toGeoJSON();
                     document.getElementById("out").innerHTML = JSON.stringify(data);
-                }));
+                }, 'blue'));
                 mymap.addControl(createCustomControl("Downloade GeoJSON", "Download JSON", function () {
                     var data = featureGroup.toGeoJSON();
 
@@ -120,7 +122,7 @@ function init() {
                     container.removeChild(download);
 
 
-                }));
+                }, 'pink'));
                 mymap.addControl(createCustomControl("Speichere Punkt auf Server", "Save to Server", ()=>{
                     var data = featureGroup.toGeoJSON();
                     document.getElementById("out").innerHTML = JSON.stringify(data);
@@ -134,7 +136,7 @@ function init() {
                         contentType:'application/json',
                         data: JSON.stringify(data),
                         dataType:'json'
-                    });
+                    },  'white');
                     getData();
                 }));
                 mymap.addControl(createCustomControl("Lokalisiere mit Browser", "Lokalisiere", ()=>{
@@ -161,7 +163,8 @@ function init() {
                         //Falls geolocation nicht supportet, Fehlermeldung einblenden
                         throw "Unkown Error"
                     }
-                }))
+                },  'pink'))
+
             } else {
                 document.getElementById("failalert").hidden = false;
                 document.getElementById("failalert").innerText = "Kein API Key! Bitte auf anderer Seite Eingeben";
@@ -228,6 +231,31 @@ function configureSwitch() {
         opt.value = i;
         selection.appendChild(opt);
     }
+
+    selection.onchange = function () {
+        var x = parseInt(selection.value)
+        if(typeof x == 'number'){
+            mymap.setView([sdata[x].coordinates[1], sdata[x].coordinates[0]]);
+            try{
+                marker.remove();
+            }catch (e) {
+                console.log(e)
+            }
+        }
+            marker = L.marker([sdata[x].coordinates[1], sdata[x].coordinates[0]], {icon: L.icon({ //Hebt es farblich hervor. Größenskalierung stimmt noch nicht so ganz
+                    iconUrl: 'public/graphics/marker-icon-red.png',
+                    shadowUrl: 'public/graphics/marker-shadow.png',
+                    iconSize: [25, 41], // size of the icon
+                    shadowSize:   [41, 41], // size of the shadow
+                    iconAnchor:   [12, 41], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [4, 62],  // the same for the shadow
+                    popupAnchor:  [1, -34] // point from which the popup should open relative to the iconAnchor
+                })}).addTo(mymap);
+        marker.bindPopup("Meine Position");
+        mymap.setZoom(20);
+
+
+        }
 }
 
 function geocoding() {
@@ -258,7 +286,7 @@ function geocoding() {
 }
 
 
-function createCustomControl(title, value, call) {
+function createCustomControl(title, value, call,  color) {
     var customControl = L.Control.extend({
 
     options: {
@@ -278,10 +306,12 @@ function createCustomControl(title, value, call) {
         container.style.height = '30px';
 
         container.onmouseover = function(){
+            container.style.backgroundColor = color;
             //Nichts
             //Todo: Was sinnvolles ergänzen
         }
         container.onmouseout = ()=>{
+            container.style.backgroundColor = 'white';
             //Todo: Ergänzen
         }
 
