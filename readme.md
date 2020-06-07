@@ -6,7 +6,6 @@ Geosoftware Task 5
 
 1. Datenbank Starten  <br>
 A) Falls Path Variablen Vergeben,  Starte ```db.cmd```
-<br>
 
 2. Server Dependencies Installieren <br>
 A) Befehl: ```npm install```
