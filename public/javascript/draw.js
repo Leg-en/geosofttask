@@ -6,6 +6,9 @@ var sdata;
 var  overlay = null;
 init()
 
+/**
+ * Initialisierungs funktion. Überprüft token und stößt aufbau der seite bzw Karte an
+ */
 function init() {
     var resource = "https://api.mapbox.com/tokens/v2?access_token=" + Token
     var req = new XMLHttpRequest();
@@ -184,6 +187,10 @@ function init() {
     req.send();
     getData();
 }
+
+/**
+ * Ruft die Punkte von der Datenbank ab.
+ */
 function getData(){
     var resource = "/gdata";
     $.ajax(resource,   // request url
@@ -202,6 +209,10 @@ function getData(){
             }
         });
 }
+
+/**
+ * Löscht punkte aus der datenbank
+ */
 function del() {
     var selection = document.getElementById("switch");
     if(typeof parseInt(selection.value) == 'number'){
@@ -219,6 +230,9 @@ function del() {
 
 }
 
+/**
+ * Erstellt den Select für die Auswahl der Punkte
+ */
 function configureSwitch() {
     var selection = document.getElementById("switch");
     selection.innerHTML = "";
@@ -259,6 +273,9 @@ function configureSwitch() {
         }
 }
 
+/**
+ * Geocoding funktionalität über Mapbox. Ergebnis wird direkt an Server gesendet
+ */
 function geocoding() {
     var adress = $("#geocoding").val();
     var resource = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + adress + ".json?" + "autocomplete=true" + "language=de" + "&access_token=" + Token;
@@ -286,7 +303,14 @@ function geocoding() {
         });
 }
 
-
+/**
+ * Hilfsfuntkion die von Gegebenen Parametern eine Custom Control zurückliefert
+ * @param title - Titel der Custom Control
+ * @param value - Inhalt der Custom Control
+ * @param call - Aufruf bei Anklick der Custom Control
+ * @param color - Farbe bei mouseover
+ * @returns {*} - Gibt Custom Control zurück
+ */
 function createCustomControl(title, value, call,  color) {
     var customControl = L.Control.extend({
 

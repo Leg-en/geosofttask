@@ -1,11 +1,9 @@
 const bodyParser = require('body-parser')
 const express = require('express');
 const mongodb = require('mongodb');
-const port=80;
+const port=80; //Default port für Webanwendungen
 
 const app = express();
-
-var busdata;
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -36,15 +34,17 @@ async function connectMongoDB() {
         setTimeout(connectMongoDb, 3000)
     }
 }
-
+ //App hört auf Port 80 und erlaubt netzwerkzugriffe
 app.listen(port,"0.0.0.0",
     () => console.log(`Example app listening at http://localhost:${port}`)
 )
 //Start connecting
 connectMongoDB()
 
+//Erlaubt nutzung von /Public, dort liegen für die HTML Files relevante datein (Js, Css, Graphiken)
 app.use('/public', express.static(__dirname + '/public'))
 
+//Routen
 app.get('/', (req,res) => {
     res.sendFile(__dirname + '/index.html')
 });
@@ -60,6 +60,7 @@ app.get('/gdata', (req,res) => {
     }))
 });
 
+//Post anweisungen zum Manipulieren der Datenbank
 app.post('/del', (req,res) => {
     res.send({ status: 'SUCCESS' });
     var id = req.body. id;
