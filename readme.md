@@ -4,9 +4,15 @@ Geosoftware Task 5
 
 ## Usage
 
-1. Datenbank Starten (Falls Path Variablen Vergeben,  Starte db.cmd)
-2. Server Dependencies Installieren (Befehl: npm install)
-3. Server Starten (Befehl:  node index.js)
+1. Datenbank Starten  <br>
+A) Falls Path Variablen Vergeben,  Starte ```db.cmd```
+<br>
+
+2. Server Dependencies Installieren <br>
+A) Befehl: ```npm install```
+                                                         
+3. Server Starten (Befehl:  node index.js) <br>
+A) Befehl: ```node index.js```
 
 ## Laufzeit
 Während der  Laufzeit kann der Server via lokal via localhost bzw localhost:80 aufgerufen werden. <br>
