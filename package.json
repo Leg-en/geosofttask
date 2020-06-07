@@ -20,10 +20,13 @@
   "homepage": "https://github.com/Leg-en/geosofttask#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "bootstrap": "^4.5.0",
     "express": "^4.17.1",
-    "jQuery": "^1.7.4",
     "jquery": "^3.5.1",
-    "jsdom": "^16.2.2"
+    "leaflet": "^1.6.0",
+    "leaflet-draw": "^1.0.4",
+    "leaflet-fullscreen": "^1.0.2",
+    "leaflet.markercluster": "^1.4.1"
   },
   "devDependencies": {
     "mongodb": "^3.5.7"

@@ -90,7 +90,8 @@ function init() {
                         polygon: false,
                         rectangle: false,
                         circle:  false,
-                        marker: true
+                        marker: true,
+                        circlemarker: false
                     },
                     edit: {
                         featureGroup: featureGroup
