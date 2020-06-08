@@ -186,12 +186,15 @@ function mapSetup(arr) {
     //Iteration durch alle Haltestellen für Fancy Marker und Default Marker
     var fancyMarker = L.markerClusterGroup();
     var defaultMarker = L.layerGroup();
+    var heat = L.heatLayer([]);
     for (var i = 0; i < arr.length; i++) {
         var marker = L.marker([arr[i][4], arr[i][3]]); //Marker  mit Koordianten setzen
         marker.bindPopup("Haltestellenname: " + arr[i][6] + "<br> Haltestellennummer: " + arr[i][5]); //Marker Popup mit inhalt Füllen
+        heat.addLatLng([arr[i][4], arr[i][3]]);
         fancyMarker.addLayer(marker); //Marker zum Markers layer hinzufügen (Von MarkerCluster)
         defaultMarker.addLayer(marker);
     }
+
 
 
     Map.LayerControl = L.control.layers({
@@ -203,7 +206,8 @@ function mapSetup(arr) {
         "Darkmode" : dark
     },{
         "Haltestellen Marker" : fancyMarker,
-        "Default Marker" : defaultMarker
+        "Default Marker" : defaultMarker,
+        "HeatMap" :  heat
     }).addTo(Map.karte)
 
     //Funktion sorgt dafür das die Layer Exklusiv zueinander sind
@@ -211,11 +215,19 @@ function mapSetup(arr) {
         if (eo.name === 'Haltestellen Marker') {
             setTimeout(function() {
                 Map.karte.removeLayer(defaultMarker)
+                Map.karte.removeLayer(heat)
             }, 10);
         } else if (eo.name === 'Default Marker') {
             setTimeout(function() {
                 Map.karte.removeLayer(fancyMarker)
+                Map.karte.removeLayer(heat)
             }, 10);
+        }else if (eo.name === 'HeatMap'){
+            setTimeout(function() {
+                Map.karte.removeLayer(fancyMarker)
+                Map.karte.removeLayer(defaultMarker)
+            }, 10);
+
         }
     });
 

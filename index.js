@@ -18,6 +18,7 @@ app.use('/leaflet-fullscreen', express.static(__dirname + '/node_modules/leaflet
 app.use('/leaflet.markercluster', express.static(__dirname + '/node_modules/leaflet.markercluster/dist'));
 app.use('/leaflet', express.static(__dirname + '/node_modules/leaflet/dist'));
 app.use('/leaflet-draw', express.static(__dirname + '/node_modules/leaflet-draw/dist'));
+app.use('/leaflet-heat', express.static(__dirname + '/node_modules/leaflet.heat/dist'));
 /**
  * function which creates a Connection to MongoDB. Retries every 3 seconds if noc connection could be established.
  */
