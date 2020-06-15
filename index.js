@@ -26,7 +26,6 @@ async function connectMongoDB() {
     try {
         //connect to database server
         app.locals.dbConnection = await mongodb.MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true, useUnifiedTopology: true });
-        //connect do database "itemdn"
         app.locals.db = await app.locals.dbConnection.db("pointdataset");
         console.log("Using db: " + app.locals.db.databaseName);
     }
