@@ -1,0 +1,20 @@
+version: "3"
+services:
+  app:
+    build: .
+    image: task7
+    ports:
+      - "80:80" # forward webserver on standard-http port
+    depends_on:
+      - mongodbservice
+  mongodbservice:
+    image: mongo:latest # to be retrieved from dockerhub
+    ports:
+      - "27017:27017" # forward mongod port
+    volumes:
+    - /data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    # find out where to mount to in the image's Dockerfile;
+    #           here: https://github.com/docker-library/mongo/blob/00a8519463e776e797c227681a595986d8f9dbe1/3.0/Dockerfile
