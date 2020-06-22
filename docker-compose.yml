@@ -1,7 +1,6 @@
 version: "3"
 services:
   app:
-    build: .
     image: task7
     ports:
       - "80:80" # forward webserver on standard-http port
