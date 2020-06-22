@@ -44,7 +44,6 @@ var fastMode = false;
 var sdata;
 
 //Startpunkt
-init();
 
 //Todo: Fixen des Layouts
 //Todo: Neu schreiben mit Fokus auf übersichtlichkeit

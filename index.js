@@ -19,6 +19,7 @@ app.use('/leaflet.markercluster', express.static(__dirname + '/node_modules/leaf
 app.use('/leaflet', express.static(__dirname + '/node_modules/leaflet/dist'));
 app.use('/leaflet-draw', express.static(__dirname + '/node_modules/leaflet-draw/dist'));
 app.use('/leaflet-heat', express.static(__dirname + '/node_modules/leaflet.heat/dist'));
+app.use('/qunit', express.static(__dirname + '/node_modules/qunit/qunit'));
 /**
  * function which creates a Connection to MongoDB. Retries every 3 seconds if noc connection could be established.
  */
@@ -47,9 +48,16 @@ app.use('/public', express.static(__dirname + '/public'))
 //Routen
 app.get('/', (req,res) => {
     res.sendFile(__dirname + '/index.html')
+    console.log("Anfrage auf Hauptseite");
 });
 app.get('/draw', (req,res) => {
     res.sendFile(__dirname + '/draw.html')
+    console.log("Anfrage auf Draw Seite");
+});
+
+app.get('/tests', (req,res) => {
+    res.sendFile(__dirname + '/Tests.html')
+    console.log("Anfrage auf Test Seite");
 });
 
 app.get('/gdata', (req,res) => {
