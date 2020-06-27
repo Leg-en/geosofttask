@@ -11,7 +11,7 @@ A) Befehl: ```npm install```
 A) Befehl: ```npm start```
 
 
-##Server mittels Docker Composer Starten
+## Server mittels Docker Composer Starten
 1. Dockerimage von diesem Repository und MongoDB Downloaden <br>
 A) Befehl ```docker pull legen26/geosofttask``` <br>
 B) Befehl ```docker pull mongo```
