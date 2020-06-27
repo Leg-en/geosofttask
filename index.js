@@ -26,7 +26,7 @@ app.use('/qunit', express.static(__dirname + '/node_modules/qunit/qunit'));
 async function connectMongoDB() {
     try {
         //connect to database server
-        app.locals.dbConnection = await mongodb.MongoClient.connect("mongodb://root:rootpassword@host.docker.internal:27017", { useNewUrlParser: true, useUnifiedTopology: true });
+        app.locals.dbConnection = await mongodb.MongoClient.connect("mongodb://root:rootpassword@mongodbservice:27017", { useNewUrlParser: true, useUnifiedTopology: true });
         app.locals.db = await app.locals.dbConnection.db("pointdataset");
         console.log("Using db: " + app.locals.db.databaseName);
     }
